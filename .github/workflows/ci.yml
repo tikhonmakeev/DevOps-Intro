@@ -19,6 +19,7 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff  # v5
         with:
           go-version-file: app/go.mod
+          cache: false
       - run: go vet ./...
 
 
@@ -32,6 +33,7 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff  # v5
         with:
           go-version-file: app/go.mod
+          cache: false
       - run: go test -race -count=1 ./...
 
 
@@ -42,6 +44,7 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff  # v5
         with:
           go-version-file: app/go.mod
+          cache: false
       - uses: golangci/golangci-lint-action@4afd733a84b1f43292c63897423277bb7f4313a9  # v8
         with:
           version: v2.5.0
