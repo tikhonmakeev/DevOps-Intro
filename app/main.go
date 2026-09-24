@@ -16,6 +16,10 @@ func main() {
 	dataPath := envOrDefault("DATA_PATH", "data/notes.json")
 	seedPath := envOrDefault("SEED_PATH", "seed.json")
 
+	if len(os.Args) > 1 && os.Args[1] == "healthcheck" {
+		os.Exit(healthcheck("http://" + localAddr(addr) + "/health"))
+	}
+
 	if err := ensureSeeded(dataPath, seedPath); err != nil {
 		log.Fatalf("seed: %v", err)
 	}
@@ -73,6 +77,26 @@ func ensureSeeded(dataPath, seedPath string) error {
 		return err
 	}
 	return os.WriteFile(dataPath, seed, 0o644)
+}
+
+func healthcheck(url string) int {
+	client := http.Client{Timeout: 2 * time.Second}
+	resp, err := client.Get(url)
+	if err != nil {
+		return 1
+	}
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return 1
+	}
+	return 0
+}
+
+func localAddr(addr string) string {
+	if len(addr) > 0 && addr[0] == ':' {
+		return "127.0.0.1" + addr
+	}
+	return addr
 }
 
 func dirname(p string) string {
