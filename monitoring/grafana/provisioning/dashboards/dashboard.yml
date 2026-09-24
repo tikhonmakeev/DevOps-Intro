@@ -1,0 +1,6 @@
+apiVersion: 1
+providers:
+  - name: quicknotes
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards
