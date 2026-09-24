@@ -1,0 +1,49 @@
+services:
+  quicknotes:
+    build: ./app
+    image: quicknotes:lab6
+    ports:
+      - '127.0.0.1:8080:8080'
+    environment:
+      ADDR: ':8080'
+      DATA_PATH: /data/notes.json
+      SEED_PATH: /seed.json
+    volumes:
+      - quicknotes-data:/data
+    healthcheck:
+      test: [CMD, /quicknotes, healthcheck]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+  prometheus:
+    image: prom/prometheus:v3.13.3
+    ports:
+      - '127.0.0.1:${PROMETHEUS_PORT:-9090}:9090'
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus:ro
+    depends_on:
+      quicknotes:
+        condition: service_healthy
+  grafana:
+    image: grafana/grafana:13.0.1
+    ports:
+      - '127.0.0.1:${GRAFANA_PORT:-3000}:3000'
+    environment:
+      GF_SECURITY_ADMIN_USER: tikhon
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-change me}
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+volumes:
+  quicknotes-data:
