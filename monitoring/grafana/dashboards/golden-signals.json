@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "schemaVersion": 39,
+  "panels": [
+    {
+      "gridPos": {
+        "w": 12,
+        "x": 0,
+        "h": 8,
+        "y": 0.0
+      },
+      "type": "timeseries",
+      "datasource": {
+        "uid": "prometheus",
+        "type": "prometheus"
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "title": "Latency proxy (requests/s, NOT seconds)",
+      "id": 1,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(quicknotes_http_requests_total{job=\"quicknotes\"}[5m]))"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "gridPos": {
+        "w": 12,
+        "x": 12,
+        "h": 8,
+        "y": 0.0
+      },
+      "type": "timeseries",
+      "datasource": {
+        "uid": "prometheus",
+        "type": "prometheus"
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "title": "Traffic",
+      "id": 2,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(quicknotes_http_requests_total{job=\"quicknotes\"}[5m]))"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "gridPos": {
+        "w": 12,
+        "x": 0,
+        "h": 8,
+        "y": 8.0
+      },
+      "type": "timeseries",
+      "datasource": {
+        "uid": "prometheus",
+        "type": "prometheus"
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "title": "Errors",
+      "id": 3,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(quicknotes_http_responses_by_code_total{job=\"quicknotes\",code=~\"4..|5..\"}[5m])) / sum(rate(quicknotes_http_requests_total{job=\"quicknotes\"}[5m]))"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "gridPos": {
+        "w": 12,
+        "x": 12,
+        "h": 8,
+        "y": 8.0
+      },
+      "type": "timeseries",
+      "datasource": {
+        "uid": "prometheus",
+        "type": "prometheus"
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "title": "Saturation (stored notes)",
+      "id": 4,
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "quicknotes_notes_total{job=\"quicknotes\"}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      }
+    }
+  ],
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "uid": "quicknotes",
+  "title": "QuickNotes",
+  "refresh": "15s"
+}

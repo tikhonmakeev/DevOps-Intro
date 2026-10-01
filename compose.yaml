@@ -1,0 +1,35 @@
+services:
+  quicknotes:
+    build: .
+    ports:
+      - '127.0.0.1:8080:8080'
+    volumes:
+      - notes:/data
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/health]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  prometheus:
+    image: prom/prometheus:v3.13.3
+    ports:
+      - '127.0.0.1:9090:9090'
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus:ro
+    depends_on:
+      quicknotes:
+        condition: service_healthy
+  grafana:
+    image: grafana/grafana:13.0.1
+    ports:
+      - '127.0.0.1:3000:3000'
+    environment:
+      GF_SECURITY_ADMIN_USER: tikhon
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?set GRAFANA_PASSWORD}
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+volumes:
+  notes:

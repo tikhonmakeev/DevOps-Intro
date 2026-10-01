@@ -1,0 +1,136 @@
+{
+  "captured_at": "2026-10-01T22:55:31.207712+00:00",
+  "health": {
+    "notes": 44,
+    "status": "ok"
+  },
+  "targets": {
+    "status": "success",
+    "data": {
+      "activeTargets": [
+        {
+          "discoveredLabels": {
+            "__address__": "quicknotes:8080",
+            "__always_scrape_classic_histograms__": "false",
+            "__convert_classic_histograms_to_nhcb__": "false",
+            "__metrics_path__": "/metrics",
+            "__scheme__": "http",
+            "__scrape_interval__": "15s",
+            "__scrape_native_histograms__": "false",
+            "__scrape_timeout__": "10s",
+            "job": "quicknotes"
+          },
+          "labels": {
+            "instance": "quicknotes:8080",
+            "job": "quicknotes"
+          },
+          "scrapePool": "quicknotes",
+          "scrapeUrl": "http://quicknotes:8080/metrics",
+          "globalUrl": "http://quicknotes:8080/metrics",
+          "lastError": "",
+          "lastScrape": "2026-10-01T22:55:20.073074194Z",
+          "lastScrapeDuration": 0.000459399,
+          "health": "up",
+          "scrapeInterval": "15s",
+          "scrapeTimeout": "10s"
+        }
+      ],
+      "droppedTargets": [],
+      "droppedTargetCounts": {
+        "quicknotes": 0
+      }
+    }
+  },
+  "dashboard_panels": [
+    "Latency proxy (requests/s, NOT seconds)",
+    "Traffic",
+    "Errors",
+    "Saturation (stored notes)"
+  ],
+  "alerts": {
+    "status": "success",
+    "data": {
+      "alerts": [
+        {
+          "labels": {
+            "alertname": "HighErrorRate",
+            "severity": "page"
+          },
+          "annotations": {
+            "runbook": "https://github.com/tikhonmakeev/DevOps-Intro/blob/feature/lab8/docs/runbook/high-error-rate.md",
+            "summary": "QuickNotes error ratio above 5%"
+          },
+          "state": "firing",
+          "activeAt": "2026-10-01T22:50:27.464142167Z",
+          "value": "1.7007211538461536e-01"
+        }
+      ]
+    }
+  },
+  "panel_values": {
+    "Latency proxy (requests/s, NOT seconds)": {
+      "status": "success",
+      "data": {
+        "resultType": "vector",
+        "result": [
+          {
+            "metric": {},
+            "value": [
+              1790895331.212,
+              "5.83859649122807"
+            ]
+          }
+        ]
+      }
+    },
+    "Traffic": {
+      "status": "success",
+      "data": {
+        "resultType": "vector",
+        "result": [
+          {
+            "metric": {},
+            "value": [
+              1790895331.214,
+              "5.83859649122807"
+            ]
+          }
+        ]
+      }
+    },
+    "Errors": {
+      "status": "success",
+      "data": {
+        "resultType": "vector",
+        "result": [
+          {
+            "metric": {},
+            "value": [
+              1790895331.215,
+              "0.17007211538461536"
+            ]
+          }
+        ]
+      }
+    },
+    "Saturation (stored notes)": {
+      "status": "success",
+      "data": {
+        "resultType": "vector",
+        "result": [
+          {
+            "metric": {
+              "__name__": "quicknotes_notes_total",
+              "instance": "quicknotes:8080",
+              "job": "quicknotes"
+            },
+            "value": [
+              1790895331.216,
+              "44"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

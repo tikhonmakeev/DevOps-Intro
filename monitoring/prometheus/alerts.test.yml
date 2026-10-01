@@ -1,0 +1,40 @@
+rule_files:
+  - alerts.yml
+evaluation_interval: 1m
+tests:
+  - name: sustained errors page
+    interval: 1m
+    input_series:
+      - series: 'quicknotes_http_requests_total{job="quicknotes"}'
+        values: '0+100x15'
+      - series: 'quicknotes_http_responses_by_code_total{job="quicknotes",code="400"}'
+        values: '0+10x15'
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: HighErrorRate
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: HighErrorRate
+        exp_alerts:
+          - exp_labels:
+              severity: page
+            exp_annotations:
+              summary: QuickNotes error ratio above 5%
+              runbook: https://github.com/tikhonmakeev/DevOps-Intro/blob/feature/lab8/docs/runbook/high-error-rate.md
+  - name: single burst does not page
+    interval: 1m
+    input_series:
+      - series: 'quicknotes_http_requests_total{job="quicknotes"}'
+        values: '0+100x15'
+      - series: 'quicknotes_http_responses_by_code_total{job="quicknotes",code="400"}'
+        values: '0 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100'
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: HighErrorRate
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: HighErrorRate
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: HighErrorRate
+        exp_alerts: []
