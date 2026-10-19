@@ -112,13 +112,20 @@ Real findings hide in the noise, the table loses its meaning, and "accepted" wit
 
 ## Bonus
 
-[govulncheck.yml](../.github/workflows/govulncheck.yml): separate job (own status check), Go 1.25.13 (the same as the image build), `govulncheck@v1.1.4` pinned, actions pinned by SHA. My Lab 3 `ci.yml` lives on `feature/lab3` and is not in this branch, so I made it a separate workflow file; it can be moved into `ci.yml` as a job after merge.
+[govulncheck.yml](../.github/workflows/govulncheck.yml): separate job (own status check), Go 1.26.9, `govulncheck@v1.1.4` pinned, actions pinned by SHA. My Lab 3 `ci.yml` lives on `feature/lab3` and is not in this branch, so I made it a separate workflow file; it can be moved into `ci.yml` as a job after merge.
 
 Local run: `go run golang.org/x/vuln/cmd/govulncheck@v1.1.4 ./...` -> `No vulnerabilities found.`
 
-Not done yet (needs real GitHub runs, I do not make up screenshots):
-- [ ] red run with a deliberately vulnerable dependency
-- [ ] green run after the revert
+### CI runs (PR to `main` of my fork: https://github.com/tikhonmakeev/DevOps-Intro/pull/2)
+
+| Run | State of the branch | Result |
+|---|---|---|
+| [39334380544](https://github.com/tikhonmakeev/DevOps-Intro/actions/runs/39334380544) | workflow with Go 1.25.13 | **red**: `Your code is affected by 7 vulnerabilities from the Go standard library` (net/http, crypto/tls, net/textproto, all fixed only in go1.26.9) |
+| [39334515201](https://github.com/tikhonmakeev/DevOps-Intro/actions/runs/39334515201) | Go bumped to 1.26.9 in the workflow | **green**: `No vulnerabilities found.` |
+| [39334625591](https://github.com/tikhonmakeev/DevOps-Intro/actions/runs/39334625591) | added `golang.org/x/text v0.3.0` and a call to `language.ParseAcceptLanguage` | **red**: `GO-2022-1059` (fixed in v0.3.8) and `GO-2021-0113` (fixed in v0.3.7), `Your code is affected by 2 vulnerabilities from 1 module.` |
+| [39335328341](https://github.com/tikhonmakeev/DevOps-Intro/actions/runs/39335328341) | revert of the dependency | **green** |
+
+The first red run was not planned: the gate found real stdlib vulnerabilities in the Go version I first pinned, so the workflow uses Go 1.26.9. Note: the Dockerfile still builds with `golang:1.25.13`, so the same stdlib CVEs are in the image; bump it to a Go version with these fixes too.
 
 ### h) reachability
 "Module has a CVE" is just presence in `go.mod`; most such CVEs are in functions we never call. govulncheck follows the call graph and reports only what our code can reach, so there are far fewer alerts to triage and each one is more likely real.
